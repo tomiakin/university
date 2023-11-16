@@ -1,0 +1,18 @@
+Name of dataset: ASModelVer6.1.zipVersion: 6.1
+Release date: 22.10.2013
+Contact: share@sed.ethz.ch, 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+File Description:
+Files include the parameterization of the Area-Source Model of the SHARE project, Version 6.1. Detailed description of parameters is available in SHARE Deliverable D6.6
+
+Files:
+ASModelVer61.*
+
+Cite this with:
+D. Giardini, J. Woessner, L. Danciu, H. Crowley, F. Cotton, G. Grünthal, R. Pinho, G. Valensise, S. Akkar, R. Arvidsson, R. Basili, T. Cameelbeeck, A. Campos-Costa, J. Douglas, M. B. Demircioglu, M. Erdik, J. Fonseca, B. Glavatovic, C. Lindholm, K. Makropoulos, C. Meletti, R. Musson, K. Pitilakis, K. Sesetyan,  D. Stromeyer,  M. Stucchi, A. Rovida, Seismic Hazard Harmonization in Europe (SHARE): Online Data Resource, doi: 10.12686/SED-00000001-SHARE, 2013.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+License:
+Copyright © 2013, ETH Zurich on behalf of the EU-FP7 Consortium of SHAREYou may use this work under the terms of the CC BY-SA 3.0 (unported) [http://creativecommons.org/licenses/by-sa/3.0/]THE WORK IS PROTECTED BY COPYRIGHT AND/OR OTHER APPLICABLE LAW. INSOFAR AS THIS WORK IS PROTECTED BY LAWS THAT NEIGHBOUR OR ARE SIMILARLY RELATED TO COPYRIGHT, SUCH AS DATABASE RIGHTS AS INTRODUCED IN EUROPE BY THE  DIRECTIVE 96/9/EC, YOU ALSO MAY USE THIS WORK UNDER THE TERMS OF CC-BY-SA 3.0 (unported). [http://creativecommons.org/licenses/by-sa/3.0/]ANY USE OF THE WORK OTHER THAN AS AUTHORIZED UNDER THIS LICENSE OR DIRECTLY ALLOWED BY THE APPLICABLE LAW IS PROHIBITED.If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one. If you have any questions, or if you wish to seek permission to use this data beyond what is offered by CC BY-SA 3.0 (unported), please contact representatives of the EU-FP7 SHARE consortium at:  ETH Zurich / Swiss Seismological ServiceSonneggstrasse 5CH-8092 Zurich, Switzerlandemail: share@sed.ethz.chTel.: +41-44-633-2179
+

@@ -51,3 +51,6 @@ hold on
 plot(x_fit,y1_fitted,'r--','linewidth',2)
 legend({'Data';['\lambda = ',num2str(p1.a)]},'location','northwest')
 
+
+
+

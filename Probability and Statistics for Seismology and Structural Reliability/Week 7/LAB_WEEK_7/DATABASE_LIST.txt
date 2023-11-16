@@ -1,0 +1,39 @@
+DATABASEs Catastrophes:________________________________________________________
+https://risk.preventionweb.net/capraviewer/main.jsp?tab=0
+https://www.emdat.be/index.php?disgroup=natural&country=eth&period=1900$2013
+
+EARTHQUAKE CATALOGUEs:_________________________________________________________
+https://earthquake.usgs.gov/earthquakes/search/
+http://www.globalcmt.org/CMTsearch.html
+http://www.isc.ac.uk/iscbulletin/search/catalogue/
+https://earthquakes.bgs.ac.uk/earthquakes/dataSearch.html
+https://emidius.mi.ingv.it/CPTI15-DBMI15/index_en.htm
+https://link.springer.com/article/10.1007/s10950-016-9610-8
+
+DATABASE Finite-Source Rupture Model Database:_________________________________
+http://equake-rc.info/SRCMOD/
+
+EXAMPLE of National Seismogenic Sources:_______________________________________
+http://eqgeogr.weebly.com/
+http://diss.rm.ingv.it/diss/
+http://www.efehr.org/en/Documentation/specific-hazard-models/europe/overview/
+
+DATABASEs Strong Motions:______________________________________________________
+http://www.isesd.hi.is/ESD_Local/frameset.htm
+https://www.iris.edu/hq/
+http://esm.mi.ingv.it/DYNA-stage/CadmoDriver?_action_do=1&_page=ACC_redirect_home_page&_rock=INVALID&_state=initial&_tabber=0&_token=NULLNULLNULLNULL
+https://ngawest2.berkeley.edu/
+https://www.strongmotioncenter.org/
+https://www.geonet.org.nz/earthquake/weak
+
+Online Resource for Statistical Seismicity Analysis:___________________________
+http://www.corssa.org/en/articles/overview/
+http://www.corssa.org/export/sites/corssa/.galleries/articles-pdf/Mignan-Woessner-2012-CORSSA-Magnitude-of-completeness.pdf
+
+Global Earthquake Model:_______________________________________________________
+https://www.globalquakemodel.org/
+
+GIS data (e.g., political borders):_____________________________________________
+http://www.diva-gis.org/gdata
+
+
