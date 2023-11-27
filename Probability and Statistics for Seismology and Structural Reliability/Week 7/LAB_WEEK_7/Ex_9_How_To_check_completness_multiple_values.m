@@ -1,4 +1,4 @@
-%% This script check the completness for each zone in the
+%% This script check the completness for each zone in the for different MAGNITUDES
 %  sub catalog
 load SUB_CATALOG
 

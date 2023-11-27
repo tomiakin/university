@@ -2,6 +2,7 @@ clear
 clc
 close all
 
+
 % THE DATA SET IS CONCRETE CUBE COMPRESSIVE STRENGTHS (MPa)
 
 %% SECTION 1.1
@@ -147,7 +148,7 @@ xlabel('mean')
 ylabel('difference')
 
 
-%% SECTION 1.2
+%% SECTION 1.2.1 PROBABILITY PLOT
 
 % Lognormal Probability plot values (Week 4 activity 6 for parameters) ADD EQ OF
 log_s1 = log(s1_data);
@@ -185,7 +186,7 @@ ny_s2 = polyval(n_s2, nx_s2);
 
 % Normal and Lognormal Plots , the stronger the gradient the better the
 % fit?
-figure()
+figure(7)
 tiledlayout(2,2)
 % normal
 nexttile
@@ -207,44 +208,240 @@ hold on; grid on; plot(lxfit_s2, lyfit_s2)
 xlabel('Log(Storey 2 Data)'); ylabel('Inverse of lognormal distribution')
 
 
-% Chi Square
+%% SECTION 1.2.2 CHI SQUARE
 
-% Number of bins
-num_bins = k;
+% STATISTICS, these variables are the same for normal/lognormal
 
-% Discretize the data into 7 bins
-[~, edges_s1] = discretize(s1_data, num_bins);
-[~, edges_s2] = discretize(s2_data, num_bins);
+% Discretize the data into specified edges/bins found using Sturge rule and
+% adjusting when the freq < 5
+edges_s1 = [10, 15.6, 21.2, 26.8, 32.4, 38, Inf];
+edges_s2 = [12, 15.4, 18.8, 22.2, Inf];
+[~, edges_s1] = discretize(s1_data, edges_s1);
+[~, edges_s2] = discretize(s2_data, edges_s2);
 
 % Calculate observed frequencies
 obs_freq_s1 = histcounts(s1_data, edges_s1);
 obs_freq_s2 = histcounts(s2_data, edges_s2);
 
-% Calculate mean and standard deviation
-mu_s1 = mean(s1_data);
-sigma_s1 = std(s1_data);
+% Degrees of freedom (no of bins - 2, due to mean and std)
+% df = k - 1 - m;  where k is no of bins, m is std + mean
+% is this the same case for normal/lognormal? Clarify
+m = 1; % according to pg 22 wk4 part 5 and pg 124 faber
+df_s1 = (length(edges_s1) - 1) - 1 - m;
+df_s2 = (length(edges_s2) - 1) - 1 - m;
+% Significance level
+alpha = 0.05;
+% Calculate the critical chi-square value for s1
+critical_chi_sq_s1 = chi2inv(1 - alpha, df_s1);
+% Calculate the critical chi-square value for s2
+critical_chi_sq_s2 = chi2inv(1 - alpha, df_s2);
 
-mu_s2 = mean(s2_data);
-sigma_s2 = std(s2_data);
+% NORMAL
+disp('Normal Chi Square')
+
+% Calculate mean and standard deviation
+mu_norm_s1 = mean(s1_data);
+sigma_norm_s1 = std(s1_data);
+mu_norm_s2 = mean(s2_data);
+sigma_norm_s2 = std(s2_data);
 
 % Calculate the cumulative probabilities for each bin
-cum_prob_s1 = normcdf(edges_s1, mu_s1, sigma_s1);
-cum_prob_s2 = normcdf(edges_s2, mu_s2, sigma_s2);
+normcdf_s1 = normcdf(edges_s1, mu_norm_s1, sigma_norm_s1);
+normcdf_s2 = normcdf(edges_s2, mu_norm_s2, sigma_norm_s2);
 
 % Calculate the probabilities for each bin
-prob_s1 = diff(cum_prob_s1);
-prob_s2 = diff(cum_prob_s2);
+normpdf_s1 = diff(normcdf_s1);
+normpdf_s2 = diff(normcdf_s2);
 
 % Calculate the expected frequencies
-exp_freq_s1 = prob_s1 * length(s1_data);
-exp_freq_s2 = prob_s2 * length(s2_data);
+exp_nfreq_s1 = normpdf_s1 * length(s1_data);
+exp_nfreq_s2 = normpdf_s2 * length(s2_data);
 
 % Perform the Chi-Square test
-chi_sq_stat_s1 = sum((obs_freq_s1 - exp_freq_s1).^2 ./ exp_freq_s1);
-chi_sq_stat_s2 = sum((obs_freq_s2 - exp_freq_s2).^2 ./ exp_freq_s2);
+chi_sq_norm_s1 = sum((obs_freq_s1 - exp_nfreq_s1).^2 ./ exp_nfreq_s1);
+chi_sq_norm_s2 = sum((obs_freq_s2 - exp_nfreq_s2).^2 ./ exp_nfreq_s2);
 
-% Degrees of freedom
-df = num_bins - 1;
+% Compare with the chi-square statistic for s1
+if chi_sq_norm_s1 < critical_chi_sq_s1
+    disp([' Chi-Square Statistic for s1: ' num2str(chi_sq_norm_s1)]);
+    disp([' Critical Chi-Square value for s1 at ' num2str(alpha*100) '% significance: ' num2str(critical_chi_sq_s1)]);
+    disp(' The null hypothesis cannot be rejected for s1.');
+else
+    disp([' Chi-Square Statistic for s1: ' num2str(chi_sq_norm_s1)]);
+    disp([' Critical Chi-Square value for s1 at ' num2str(alpha*100) '% significance: ' num2str(critical_chi_sq_s1)]);
+    disp(' The null hypothesis is rejected for s1.');
+end
+
+% Compare with the chi-square statistic for s2
+if chi_sq_norm_s2 < critical_chi_sq_s2
+    disp([' Chi-Square Statistic for s2: ' num2str(chi_sq_norm_s2)]);
+    disp([' Critical Chi-Square value for s2 at ' num2str(alpha*100) '% significance: ' num2str(critical_chi_sq_s2)]);
+    disp(' The null hypothesis cannot be rejected for s2.');
+else
+    disp([' Chi-Square Statistic for s2: ' num2str(chi_sq_norm_s2)]);
+    disp([' Critical Chi-Square value for s2 at ' num2str(alpha*100) '% significance: ' num2str(critical_chi_sq_s2)]);
+    disp(' The null hypothesis is rejected for s2.');
+end
+
+% Obvserved/expected bar chart
+figure(8);
+tiledlayout(2,1)
+nexttile
+bar(edges_s1(1:end-1), [obs_freq_s1', exp_nfreq_s1'], 'grouped');
+xlabel('Intervals'); ylabel('Frequency'); title('Storey 1');
+legend('Observed', 'Expected')
+% Set x-axis ticks and labels
+xticks(edges_s1(1:end-1));
+xticklabels(cellfun(@(a, b) sprintf('%.1f-%.1f', a, b), num2cell(edges_s1(1:end-1)), num2cell(edges_s1(2:end)), 'UniformOutput', false));
+% Show the grid
+grid on;
+nexttile
+bar(edges_s2(1:end-1), [obs_freq_s2', exp_nfreq_s2'], 'grouped');
+xlabel('Intervals'); ylabel('Frequency'); title('Storey 2');
+legend('Observed', 'Expected', 'Location', 'northwest')
+% Set x-axis ticks and labels
+xticks(edges_s2(1:end-1));
+xticklabels(cellfun(@(a, b) sprintf('%.1f-%.1f', a, b), num2cell(edges_s2(1:end-1)), num2cell(edges_s2(2:end)), 'UniformOutput', false));
+% Show the grid
+grid on;
+
+
+% LOGNORMAL
+disp('Lognormal Chi Square')
+
+% Lognormal parameters (found using mean/std, see Matlab doc or Wk4 Act 6)
+mu_log_s1 = log(s1_mean^2/(sqrt(s1_std^2 + s1_mean^2))); 
+sigma_log_s1 = sqrt( log( (s1_std^2)/(s1_mean^2) + 1 ) );
+mu_log_s2 = log(s2_mean^2/(sqrt(s2_std^2 + s2_mean^2))); 
+sigma_log_s2 = sqrt( log( (s2_std^2)/(s2_mean^2) + 1 ) );
+
+% Calculate cdf of each bin
+logncdf_s1 = logncdf(edges_s1, mu_log_s1, sigma_log_s1);
+logncdf_s2 = logncdf(edges_s2, mu_log_s2, sigma_log_s2);
+
+% Calculate pdf of each bin
+lognpdf_s1 = diff(logncdf_s1);
+lognpdf_s2 = diff(logncdf_s2);
+
+% Calculate the expected frequencies
+exp_lognfreq_s1 = lognpdf_s1 * length(s1_data);
+exp_lognfreq_s2 = lognpdf_s2 * length(s2_data);
+
+% Perform the Chi-Square test
+chi_sq_logn_s1 = sum((obs_freq_s1 - exp_lognfreq_s1).^2 ./ exp_lognfreq_s1);
+chi_sq_logn_s2 = sum((obs_freq_s2 - exp_lognfreq_s2).^2 ./ exp_lognfreq_s2);
+
+% Compare with the chi-square statistic for s1
+if chi_sq_logn_s1 < critical_chi_sq_s1
+    disp([' Chi-Square Statistic for s1: ' num2str(chi_sq_logn_s1)]);
+    disp([' Critical Chi-Square value for s1 at ' num2str(alpha*100) '% significance: ' num2str(critical_chi_sq_s1)]);
+    disp(' The null hypothesis cannot be rejected for s1.');
+else
+    disp([' Chi-Square Statistic for s1: ' num2str(chi_sq_logn_s1)]);
+    disp([' Critical Chi-Square value for s1 at ' num2str(alpha*100) '% significance: ' num2str(critical_chi_sq_s1)]);
+    disp(' The null hypothesis is rejected for s1.');
+end
+
+% Compare with the chi-square statistic for s2
+if chi_sq_logn_s2 < critical_chi_sq_s2
+    disp([' Chi-Square Statistic for s2: ' num2str(chi_sq_logn_s2)]);
+    disp([' Critical Chi-Square value for s2 at ' num2str(alpha*100) '% significance: ' num2str(critical_chi_sq_s2)]);
+    disp(' The null hypothesis cannot be rejected for s2.');
+else
+    disp([' Chi-Square Statistic for s2: ' num2str(chi_sq_logn_s2)]);
+    disp([' Critical Chi-Square value for s2 at ' num2str(alpha*100) '% significance: ' num2str(critical_chi_sq_s2)]);
+    disp(' The null hypothesis is rejected for s2.');
+end
+
+% Obvserved/expected bar chart
+
+figure(9);
+tiledlayout(2,1)
+nexttile
+bar(edges_s1(1:end-1), [obs_freq_s1', exp_lognfreq_s1'], 'grouped');
+xlabel('Intervals'); ylabel('Frequency'); title('Storey 1');
+legend('Observed', 'Expected')
+% Set x-axis ticks and labels
+xticks(edges_s1(1:end-1));
+xticklabels(cellfun(@(a, b) sprintf('%.1f-%.1f', a, b), num2cell(edges_s1(1:end-1)), num2cell(edges_s1(2:end)), 'UniformOutput', false));
+% Show the grid
+grid on;
+nexttile
+bar(edges_s2(1:end-1), [obs_freq_s2', exp_lognfreq_s2'], 'grouped');
+xlabel('Intervals'); ylabel('Frequency'); title('Storey 2');
+legend('Observed', 'Expected', 'Location', 'northwest')
+% Set x-axis ticks and labels
+xticks(edges_s2(1:end-1));
+xticklabels(cellfun(@(a, b) sprintf('%.1f-%.1f', a, b), num2cell(edges_s2(1:end-1)), num2cell(edges_s2(2:end)), 'UniformOutput', false));
+% Show the grid
+grid on;
+
+%% SECTION 1.2.3 Kolmogorov and Smirnov goodness of fit tests.
+
+% Statistics
+
+% Could be s2_data as they are the same length
+N = length(s1_data);
+% Creation of the SEED vector: 1,2,...,N
+SEED = 1:1:N;
+% Calculation of the percentiles
+ks_obs = (SEED./(N+1)).';
+
+% NORMAL
+
+% Predicted cdf values
+ksnorm_exp_s1 = normcdf(s1_data, s1_mean, s1_std);
+ksnorm_exp_s2 = normcdf(s2_data, s2_mean, s2_std);
+
+% Errors
+norm_errors_s1 = ks_obs - ksnorm_exp_s1;
+normmax_error_s1 = max(norm_errors_s1);
+norm_errors_s2 = ks_obs - ksnorm_exp_s2;
+normmax_error_s2 = max(norm_errors_s2);
+
+% Hypothesis
+disp('Normal K-S')
+disp([' For s1 (Sample Size N = ' num2str(N) '): Max error = ' num2str(normmax_error_s1)]);
+disp([' For s2 (Sample Size N = ' num2str(N) '): Max error = ' num2str(normmax_error_s2)]);
+
+% LOGNORMAL
+
+% Predicted cdf values
+kslog_exp_s1 = logncdf(s1_data, mu_log_s1, sigma_log_s1);
+kslog_exp_s2 = logncdf(s2_data, mu_log_s2, sigma_log_s2);
+
+% Errors
+log_errors_s1 = ks_obs - kslog_exp_s1;
+logmax_error_s1 = max(log_errors_s1);
+log_errors_s2 = ks_obs - kslog_exp_s2;
+logmax_error_s2 = max(log_errors_s2);
+
+% Hypothesis
+disp('Lognormal K-S')
+disp([' For s1 (Sample Size N = ' num2str(N) '): Max error = ' num2str(logmax_error_s1)]);
+disp([' For s2 (Sample Size N = ' num2str(N) '): Max error = ' num2str(logmax_error_s2)]);
+
+%% 1.3 Sample Likelihood
+
+disp('Sample Likelihood (greater means better fit)')
+
+% NORMAL S1
+normal_like_s1 = sampleLike(chi_sq_norm_s1, df_s1);
+% LOGNORMAL S1
+lognormal_like_s1 = sampleLike(chi_sq_logn_s1, df_s1);
+disp([' For s1 the sample likelihood for the normal is ' num2str(normal_like_s1) ', lognormal is ' num2str(lognormal_like_s1)] );
+
+% NORMAL S2
+normal_like_s2 = sampleLike(chi_sq_norm_s2, df_s2);
+% LOGNORMAL S2
+lognormal_like_s2 = sampleLike(chi_sq_logn_s2, df_s2);
+disp([' For s2 the sample likelihood for the normal is ' num2str(normal_like_s2) ', lognormal is ' num2str(lognormal_like_s2)] );
+
+function likelihood = sampleLike(cs, df)
+    likelihood = ( (cs^(df/(2-1))) / (2^(df/2) * gamma(df/2)) ) * (exp(-cs-2));
+end
+
+
 
 
 

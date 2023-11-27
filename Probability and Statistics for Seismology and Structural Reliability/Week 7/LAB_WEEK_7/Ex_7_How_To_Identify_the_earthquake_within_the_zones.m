@@ -8,7 +8,7 @@ Zones = shaperead('9_Reggio_zones.shp');
 cd ..
 
 %% Select only the area where there are more earthquakes
-Area_to_keep = [2 5 8];
+Area_to_keep = [1 5 8];
 
 Final_zones = Zones(Area_to_keep);
 
