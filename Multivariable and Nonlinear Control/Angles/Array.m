@@ -19,7 +19,9 @@ if fid_b == -1
 end
 
 % Specify the CSV file name
-file_name = 'motor_angles.csv';
+% file_name = 'motor_angles_4.5mm_circle.csv';
+file_name = 'motor_angles_102mm_triangle_finalFFFF.csv';
+% file_name = 'motor_angles_102mm_triangle.csv';
 
 % Read the entire data from the CSV file
 data = csvread(file_name);

@@ -24,6 +24,8 @@ Percentiles = SEED./(1+N);
 %% Plot of the percentiles against the sorted data
 figure % creation of a new figure
 
+
+
 subplot(1,2,1) % definition of a panel of plots (1 x 2) - first plot
 plot(Sorted_data,Percentiles,'ko','markersize',10,'linewidth',2,'markerfacecolor','y')
 xlabel('Sorted data')

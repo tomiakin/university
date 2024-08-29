@@ -1,0 +1,92 @@
+clear
+clc
+close all
+
+%% Load the catalog
+load SHAREver3
+figure(1)
+plot(SHAREver3.Lon,SHAREver3.Lat,'k.')
+grid on
+
+%% POINT OF INTEREST
+% X = [LAT LON]; x-axis is always LON; y-axis is LAT
+
+X = [35.36	25.12]; 
+
+hold on
+plot(X(:,2),X(:,1),'ko','markerfacecolor','y','markersize',9,'linewidth',2)
+%% Import the shape file of the source zones
+cd('SHP')
+Zones = shaperead('seismic_zones.shp');
+cd ..
+
+hold on
+plot([Zones.X],[Zones.Y],'r','linewidth',2)
+
+%% How to make appear a text ID at the centre of the seismic zones
+for i=1:length(Zones)
+    hold on
+    text(Zones(i).LONC,Zones(i).LATC,num2str(i),'fontweight','bold')
+end
+
+axis equal
+
+%% 
+xlim([0.9*min([Zones.X]) 1.1*max([Zones.X])])
+ylim([0.99*min([Zones.Y]) 1.01*max([Zones.Y])])
+
+
+
+
+%% Select only the area where there are more earthquakes
+Area_to_keep = [1 5];
+
+Final_zones = Zones(Area_to_keep);
+save Final_zones Final_zones
+
+%% Final figure (selected zones)
+figure(2)
+xlabel('Longitude [deg]')
+ylabel('Latitude [deg]')
+
+
+%% POINT OF INTEREST
+
+plot(X(:,2),X(:,1),'ko','markerfacecolor','y','markersize',9,'linewidth',2)
+
+%% Plot of the final source zones
+
+hold on
+plot([Final_zones.X],[Final_zones.Y],'r','linewidth',2)
+
+%% How to make appear a text ID at the centre of the seismic zones
+
+for i=1:length(Final_zones)
+    hold on
+    text(Final_zones(i).LONC,Final_zones(i).LATC,num2str(i),'fontweight','bold')
+end
+
+axis equal
+
+%% Set limits 
+xlim([0.9*min([Final_zones.X]) 1.1*max([Final_zones.X])])
+ylim([0.99*min([Final_zones.Y]) 1.01*max([Final_zones.Y])])
+grid on
+
+%% Load the catalog and plot sub catalog
+
+% hold on
+% plot(SHAREver3.Lon,SHAREver3.Lat,'k.')
+
+load SHAREver3
+for i=1:length(Final_zones)
+    
+    index = inpolygon(SHAREver3.Lon,SHAREver3.Lat,Final_zones(i).X,Final_zones(i).Y);
+    SUB_CATALOG(i).CATALOG = SHAREver3(index,:);
+    hold all
+    plot(SUB_CATALOG(i).CATALOG.Lon,SUB_CATALOG(i).CATALOG.Lat,'+')
+    % scatter(SHAREver3.Lon,SHAREver3.Lat,0.002*10^-15*10.^(1.5*SHAREver3.Mw+9.05),SHAREver3.Mw,'fill')
+    % colorbar
+end
+
+save SUB_CATALOG SUB_CATALOG
